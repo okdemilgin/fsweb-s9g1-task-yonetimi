@@ -5,23 +5,34 @@ import TaskForm from "./TaskForm";
 import TaskHookForm from "./TaskHookForm";
 import PeopleForm from "./PeopleForm";
 import { initialTasks, initialTeam } from "./data";
-
+import { ToastContainer,toast } from "react-toastify";
 
 function App() {
+  const notify = (text) => toast ("Wow so easy!" + text);
   const [tasks, setTasks] = useState(initialTasks);
   const [team, setTeam] = useState(initialTeam);
 
   function handleTaskSubmit(yeniTask) {
     setTasks([yeniTask, ...tasks])
+    notify (yeniTask.title + "yapılmak için bekliyor");
   }
 
   function handlePeopleSubmit(yeniKisi) {
+    notify (yeniKisi + "iş kitlemek için hazır");
     setTeam([...team, yeniKisi])
   }
 
   function handleComplete(id) {
-    console.log("tamamlama fonksiyonunu buraya yazın")
+    console.log("tamamlama fonksiyonunu buraya yazın", id);
+    const tasksClone = [...tasks];
+    const updatedTask = tasksClone.find((t) => t.id === id );updatedTask.status = "yapıldı";
+    console.log ("updatedTask", updatedTask);
+    notify (updatedTask.title + "tamamlandı!")
+    setTasks(tasksClone);
+   
   }
+
+ 
 
   return (
     <div className="app">
@@ -59,9 +70,21 @@ function App() {
           </div>
         </div>
       </div>
-
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
     </div>
   );
 }
+
 
 export default App;
